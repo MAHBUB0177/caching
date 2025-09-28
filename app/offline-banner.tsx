@@ -1,4 +1,6 @@
 "use client";
+import Headre from "@/component/ headre";
+import Footer from "@/component/footer";
 import { useEffect, useState } from "react";
 
 export default function OfflineBanner() {
@@ -25,7 +27,11 @@ export default function OfflineBanner() {
 
   return (
     <div className="bg-yellow-300 text-center p-2">
-      ⚠️ You are offline
+      ⚠️  <Headre />
+      <main className="flex-1 flex items-center justify-center">
+        <p className="text-center">⚠️ You are offline. Some content may not be available.</p>
+      </main>
+      <Footer />
     </div>
   );
 }

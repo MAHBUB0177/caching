@@ -1,19 +1,55 @@
+// import withPWA from "next-pwa";
+// import { NextConfig } from "next";
+
+// const runtimeCaching = [
+//   {
+//     urlPattern: /^\/_next\/static\/.*/,
+//     handler: "StaleWhileRevalidate",
+//     options: { cacheName: "static-resources" },
+//   },
+//   {
+//     urlPattern: /^\/_next\/image\/.*/,
+//     handler: "StaleWhileRevalidate",
+//     options: { cacheName: "image-cache" },
+//   },
+//   {
+//     urlPattern: /^\/.*$/,
+//     handler: "NetworkFirst",
+//     options: { cacheName: "pages-cache" },
+//   },
+// ];
+
+// const nextConfig: NextConfig = {
+//   reactStrictMode: true,
+//   experimental: { esmExternals: true },
+// };
+
+// export default withPWA({
+//   ...nextConfig,
+//   dest: "public",
+//   register: true,
+//   skipWaiting: true,
+//   disable: process.env.NODE_ENV === "development",
+//   // runtimeCaching,
+// });
+
+
 import withPWA from "next-pwa";
 import { NextConfig } from "next";
 
 const runtimeCaching = [
   {
-    urlPattern: /^\/_next\/static\/.*/,
+    urlPattern: /^\/_next\/static\/.*/, // static files
     handler: "StaleWhileRevalidate",
     options: { cacheName: "static-resources" },
   },
   {
-    urlPattern: /^\/_next\/image\/.*/,
+    urlPattern: /^\/_next\/image\/.*/, // Next.js Image Optimization
     handler: "StaleWhileRevalidate",
     options: { cacheName: "image-cache" },
   },
   {
-    urlPattern: /^\/.*$/,
+    urlPattern: /^\/.*$/, // pages & API routes
     handler: "NetworkFirst",
     options: { cacheName: "pages-cache" },
   },
@@ -29,6 +65,9 @@ export default withPWA({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development",
+  disable: process.env.NODE_ENV === "development", // disable PWA in dev
   // runtimeCaching,
+  // fallbacks: {
+  //   document: "/offline", // fallback page when offline
+  // },
 });
