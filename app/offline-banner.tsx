@@ -2,13 +2,19 @@
 import { useEffect, useState } from "react";
 
 export default function OfflineBanner() {
-  const [offline, setOffline] = useState(!navigator.onLine);
+  const [offline, setOffline] = useState(false);
 
   useEffect(() => {
+    // safe check for browser
+    const initialStatus = typeof navigator !== "undefined" && !navigator.onLine;
+    setOffline(initialStatus);
+
     const goOnline = () => setOffline(false);
     const goOffline = () => setOffline(true);
+
     window.addEventListener("online", goOnline);
     window.addEventListener("offline", goOffline);
+
     return () => {
       window.removeEventListener("online", goOnline);
       window.removeEventListener("offline", goOffline);
@@ -16,7 +22,10 @@ export default function OfflineBanner() {
   }, []);
 
   if (!offline) return null;
+
   return (
-    <div className="bg-yellow-300 text-center p-2">⚠️ You are offline</div>
+    <div className="bg-yellow-300 text-center p-2">
+      ⚠️ You are offline
+    </div>
   );
 }
