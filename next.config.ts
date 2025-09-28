@@ -1,73 +1,42 @@
-// import withPWA from "next-pwa";
-// import { NextConfig } from "next";
-
-// const runtimeCaching = [
-//   {
-//     urlPattern: /^\/_next\/static\/.*/,
-//     handler: "StaleWhileRevalidate",
-//     options: { cacheName: "static-resources" },
-//   },
-//   {
-//     urlPattern: /^\/_next\/image\/.*/,
-//     handler: "StaleWhileRevalidate",
-//     options: { cacheName: "image-cache" },
-//   },
-//   {
-//     urlPattern: /^\/.*$/,
-//     handler: "NetworkFirst",
-//     options: { cacheName: "pages-cache" },
-//   },
-// ];
-
-// const nextConfig: NextConfig = {
-//   reactStrictMode: true,
-//   experimental: { esmExternals: true },
-// };
-
-// export default withPWA({
-//   ...nextConfig,
-//   dest: "public",
-//   register: true,
-//   skipWaiting: true,
-//   disable: process.env.NODE_ENV === "development",
-//   // runtimeCaching,
-// });
-
-
-import withPWA from "next-pwa";
-import { NextConfig } from "next";
-
-const runtimeCaching = [
-  {
-    urlPattern: /^\/_next\/static\/.*/, // static files
-    handler: "StaleWhileRevalidate",
-    options: { cacheName: "static-resources" },
-  },
-  {
-    urlPattern: /^\/_next\/image\/.*/, // Next.js Image Optimization
-    handler: "StaleWhileRevalidate",
-    options: { cacheName: "image-cache" },
-  },
-  {
-    urlPattern: /^\/.*$/, // pages & API routes
-    handler: "NetworkFirst",
-    options: { cacheName: "pages-cache" },
-  },
-];
-
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  experimental: { esmExternals: true },
-};
-
-export default withPWA({
-  ...nextConfig,
+// next.config.js
+const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === "development", // disable PWA in dev
-  // runtimeCaching,
-  // fallbacks: {
-  //   document: "/offline", // fallback page when offline
-  // },
+  disable: process.env.NODE_ENV === 'development', // Disable PWA in dev
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  swcMinify: true,
+  workboxOptions: {
+    disableDevLogs: true,
+  },
+  // Example runtime caching for an API endpoint
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/api\.example\.com\/data.*/i,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'example-api-cache',
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 60 * 60 * 24 * 7, // Cache for 1 week
+        },
+        cacheableResponse: {
+          statuses: [0, 200],
+        },
+      },
+    },
+    {
+      urlPattern: /.*/i,
+      handler: 'NetworkOnly',
+      options: {
+        cacheableResponse: {
+          statuses: [0, 200],
+        },
+      },
+    },
+  ],
 });
+
+module.exports = withPWA({});
